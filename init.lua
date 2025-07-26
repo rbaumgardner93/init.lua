@@ -87,13 +87,18 @@ vim.keymap.set('v', '<', '<gv', { desc = 'Dedent' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- navigation
+-- basic
 vim.keymap.set('n', 'J', 'mzJ`z', { desc = 'Move line above and keep centered' })
 vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Keep centered when navigating forward' })
 vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Keep centered when navigating backward' })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Keep it centered when moving down a file' })
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Keep it centered when moving up a file' })
 vim.keymap.set('n', '<leader>e', '<cmd>Explore<CR>', { desc = "Open file explorer" })
-vim.keymap.set('n', '<leader>sf', ':find ', { desc = 'Find file'})
+
+-- fuzzy finder
+vim.keymap.set('n', '<leader>sf', '<cmd>FzfLua files<CR>', { desc = '[S]earch [F]iles'})
+vim.keymap.set('n', '<leader>sw', '<cmd>FzfLua live_grep<CR>', { desc = '[S]earch [W]ord'})
+vim.keymap.set('n', '<leader>sr', '<cmd>FzfLua resume<CR>', { desc = '[S]earch [R]esume'})
 
 -- autocommands
 
