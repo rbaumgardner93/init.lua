@@ -1,7 +1,7 @@
 -- options
 
 -- theme & transparency
-vim.cmd.colorscheme("vim")
+vim.cmd.colorscheme("default")
 
 -- general
 vim.opt.number = true					-- make line numbers default
@@ -103,4 +103,19 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
     vim.hl.on_yank()
   end,
+})
+
+-- plugin initialization
+
+require("config.lazy")
+require("lazy").setup({
+	spec = {
+	    -- import your plugins
+	    { import = "plugins" },
+	},
+	-- Configure any other settings here. See the documentation for more details.
+	-- colorscheme that will be used when installing plugins.
+	install = { colorscheme = { "default" } },
+	-- automatically check for plugin updates
+	checker = { enabled = true },
 })
