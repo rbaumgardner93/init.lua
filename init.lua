@@ -1,8 +1,5 @@
 -- options
 
--- theme & transparency
-vim.cmd.colorscheme("default")
-
 -- general
 vim.opt.number = true -- make line numbers default
 vim.opt.relativenumber = true -- relative line numbers
@@ -155,7 +152,7 @@ require("lazy").setup({
 	},
 	-- Configure any other settings here. See the documentation for more details.
 	-- colorscheme that will be used when installing plugins.
-	install = { colorscheme = { "default" } },
+	install = { colorscheme = { "cyberdream" } },
 	-- automatically check for plugin updates
 	checker = { enabled = true },
 })
