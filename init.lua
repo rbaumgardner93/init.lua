@@ -93,6 +93,7 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Keep it centered when moving u
 vim.keymap.set("n", "<leader>e", "<cmd>Explore<CR>", { desc = "Open file explorer" })
 
 -- fuzzy finder
+vim.keymap.set("n", "<leader>sd", "<cmd>FzfLua diagnostics_workspace<CR>", { desc = "[S]earch [D]iagnostics" })
 vim.keymap.set("n", "<leader>sf", "<cmd>FzfLua files<CR>", { desc = "[S]earch [F]iles" })
 vim.keymap.set("n", "<leader>sg", "<cmd>FzfLua live_grep<CR>", { desc = "[S]earch [G]rep" })
 vim.keymap.set("n", "<leader>sr", "<cmd>FzfLua resume<CR>", { desc = "[S]earch [R]esume" })
