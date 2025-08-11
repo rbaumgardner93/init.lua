@@ -101,6 +101,7 @@ vim.keymap.set("n", "<leader>e", "<cmd>Explore<CR>", { desc = "Open file explore
 vim.keymap.set("n", "<leader>sd", "<cmd>FzfLua diagnostics_workspace<CR>", { desc = "[S]earch [D]iagnostics" })
 vim.keymap.set("n", "<leader>sf", "<cmd>FzfLua files<CR>", { desc = "[S]earch [F]iles" })
 vim.keymap.set("n", "<leader>sg", "<cmd>FzfLua live_grep<CR>", { desc = "[S]earch [G]rep" })
+vim.keymap.set("n", "<leader>sh", "<cmd>FzfLua helptags<CR>", { desc = "[S]earch [H]elp" })
 vim.keymap.set("n", "<leader>sr", "<cmd>FzfLua resume<CR>", { desc = "[S]earch [R]esume" })
 vim.keymap.set("n", "<leader>sw", "<cmd>FzfLua grep_cword<CR>", { desc = "[S]earch [W]ord" })
 
