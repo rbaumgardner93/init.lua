@@ -19,15 +19,20 @@ vim.opt.incsearch = true -- show matches as you type
 vim.opt.inccommand = "split" -- preview substitutions as you type
 
 -- visual
+vim.opt.guicursor =
+	"n-v-c:block,i:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Curosr/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
+
 vim.opt.termguicolors = true -- enable 24-bit colors
 vim.opt.signcolumn = "yes" -- always show sign column
 vim.opt.colorcolumn = "80" -- show color column at 80 characters
 vim.opt.showmatch = true -- highlight matching brackets
+vim.opt.matchtime = 0
 vim.opt.cmdheight = 1 -- command line height
 vim.opt.completeopt = "menuone,noinsert,noselect" -- completion options
 vim.opt.pumheight = 10 -- popup menu height
 vim.opt.pumblend = 10 -- popup menu transparency
 vim.opt.winblend = 0 -- floating window transparency
+vim.opt.winborder = "rounded" -- default border style of floting windows
 vim.opt.conceallevel = 0 -- don't hide markup
 vim.opt.concealcursor = "" -- don't hide cursor line markup
 vim.opt.lazyredraw = true -- don't redraw during macros
@@ -157,6 +162,5 @@ require("lazy").setup({
 	-- Configure any other settings here. See the documentation for more details.
 	-- colorscheme that will be used when installing plugins.
 	install = { colorscheme = { "tokyonight" } },
-	-- automatically check for plugin updates
-	checker = { enabled = true },
+	checker = { enabled = false }, -- automatically check for plugin updates
 })
