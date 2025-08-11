@@ -95,7 +95,6 @@ vim.keymap.set("n", "n", "nzzzv", { desc = "Keep centered when navigating forwar
 vim.keymap.set("n", "N", "Nzzzv", { desc = "Keep centered when navigating backward" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Keep it centered when moving down a file" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Keep it centered when moving up a file" })
-vim.keymap.set("n", "<leader>e", "<cmd>Explore<CR>", { desc = "Open file explorer" })
 
 -- fuzzy finder
 vim.keymap.set("n", "<leader>sd", "<cmd>FzfLua diagnostics_workspace<CR>", { desc = "[S]earch [D]iagnostics" })
@@ -106,7 +105,7 @@ vim.keymap.set("n", "<leader>sr", "<cmd>FzfLua resume<CR>", { desc = "[S]earch [
 vim.keymap.set("n", "<leader>sw", "<cmd>FzfLua grep_cword<CR>", { desc = "[S]earch [W]ord" })
 
 -- files
-vim.keymap.set("n", "-", "<cmd>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>e", "<cmd>Oil<CR>", { desc = "Open parent directory" })
 
 -- autocommands
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -153,15 +152,152 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 -- plugin initialization
-
-require("config.lazy")
-require("lazy").setup({
-	spec = {
-		-- import your plugins
-		{ import = "plugins" },
+vim.pack.add({
+	{
+		src = "https://github.com/Saghen/blink.cmp",
+		version = vim.version.range("1.0"),
 	},
-	-- Configure any other settings here. See the documentation for more details.
-	-- colorscheme that will be used when installing plugins.
-	install = { colorscheme = { "tokyonight" } },
-	checker = { enabled = false }, -- automatically check for plugin updates
+	{ src = "https://github.com/numToStr/Comment.nvim" },
+	{ src = "https://github.com/stevearc/conform.nvim" },
+	{ src = "https://github.com/ibhagwan/fzf-lua" },
+	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
+	{ src = "https://github.com/NMAC427/guess-indent.nvim" },
+	{ src = "https://github.com/mason-org/mason.nvim" },
+	{ src = "https://github.com/mason-org/mason-lspconfig.nvim" },
+	{ src = "https://github.com/echasnovski/mini.icons" },
+	{ src = "https://github.com/neovim/nvim-lspconfig" },
+	{
+		src = "https://github.com/nvim-treesitter/nvim-treesitter",
+		version = "master",
+	},
+	{ src = "https://github.com/stevearc/oil.nvim" },
+	{ src = "https://github.com/folke/tokyonight.nvim" },
 })
+
+-- plugin setup
+
+-- tokyonight.nvim
+require("tokyonight").setup({
+	transparent = true,
+})
+
+-- colorscheme
+vim.cmd([[ colorscheme tokyonight]])
+
+-- lsp configuration
+
+-- typescript
+vim.lsp.enable("ts_ls")
+
+-- lua
+vim.lsp.enable("lua_ls")
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			runtime = {
+				version = "LuaJIT",
+			},
+			diagnostics = {
+				globals = { "vim" },
+			},
+			workspace = {
+				library = { vim.env.VIMRUNTIME },
+				checkThirdParty = false,
+			},
+		},
+	},
+})
+
+-- blink.cmp
+require("blink-cmp").setup({
+	keymap = {
+		preset = "default",
+	},
+	completion = {
+		documentation = { auto_show = false, auto_show_delay_ms = 500 },
+	},
+	sources = {
+		default = { "lsp", "path" },
+	},
+	fuzzy = { implementation = "lua" },
+	signature = { enabled = true },
+})
+
+-- conform.nvim
+require("conform").setup({
+	formatters_by_ft = {
+		lua = { "stylua" },
+		javascript = {
+			"prettierd",
+			"prettier",
+			stop_after_first = true,
+		},
+		javascriptreact = {
+			"prettierd",
+			"prettier",
+			stop_after_first = true,
+		},
+		typescript = {
+			"prettierd",
+			"prettier",
+			stop_after_first = true,
+		},
+		typescriptreact = {
+			"prettierd",
+			"prettier",
+			stop_after_first = true,
+		},
+	},
+	format_on_save = {
+		lsp_format = "fallback",
+		timeout_ms = 500,
+	},
+})
+
+-- fzf.lua
+require("fzf-lua").setup({
+	"ivy",
+})
+
+-- gitsigns.nvim
+require("gitsigns").setup({
+	on_attach = function()
+		local gitsigns = require("gitsigns")
+		vim.keymap.set("x", "<leader>s", function()
+			gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+		end)
+
+		vim.keymap.set("x", "<leader>u", function()
+			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+		end)
+	end,
+})
+
+-- guess-indent.nvim
+require("guess-indent").setup({})
+
+-- mini.icons
+require("mini.icons").setup()
+
+-- mason
+require("mason").setup()
+
+-- mason-lspconfig.nvim
+require("mason-lspconfig").setup({
+	ensure_installed = { "lua_ls", "ts_ls" },
+})
+
+require("nvim-treesitter.configs").setup({
+	ensure_installed = { "bash", "diff", "html", "lua", "markdown", "typescript", "javascript" },
+	auto_install = true,
+	highlight = {
+		enable = true,
+	},
+	ignore_install = {},
+	indent = { enable = true },
+	sync_install = false,
+	modules = { "nvim-treesitter.configs" },
+})
+
+-- oil.nvim
+require("oil").setup()
