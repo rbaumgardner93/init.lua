@@ -107,6 +107,27 @@ vim.keymap.set("n", "<leader>sw", "<cmd>FzfLua grep_cword<CR>", { desc = "[S]ear
 -- files
 vim.keymap.set("n", "<leader>e", "<cmd>Oil<CR>", { desc = "Open parent directory" })
 
+-- harpoon
+vim.keymap.set("n", "<leader>a", function()
+	require("harpoon"):list():add()
+end, { desc = "Add buffer to harpoon" })
+vim.keymap.set("n", "<C-e>", function()
+	local harpoon = require("harpoon")
+	harpoon.ui:toggle_quick_menu(harpoon:list())
+end, { desc = "Toggle harpoon quick menu" })
+vim.keymap.set("n", "<C-h>", function()
+	require("harpoon"):list():select(1)
+end, { desc = "Select first buffer in harpoon" })
+vim.keymap.set("n", "<C-j>", function()
+	require("harpoon"):list():select(2)
+end, { desc = "Select second buffer in harpoon" })
+vim.keymap.set("n", "<C-k>", function()
+	require("harpoon"):list():select(3)
+end, { desc = "Select third buffer in harpoon" })
+vim.keymap.set("n", "<C-l>", function()
+	require("harpoon"):list():select(3)
+end, { desc = "Select fourth buffer in harpoon" })
+
 -- autocommands
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",
@@ -159,6 +180,8 @@ vim.pack.add({
 	},
 	{ src = "https://github.com/numToStr/Comment.nvim" },
 	{ src = "https://github.com/stevearc/conform.nvim" },
+	{ src = "https://github.com/sindrets/diffview.nvim" },
+	{ src = "https://github.com/ThePrimeagen/harpoon", version = "harpoon2" },
 	{ src = "https://github.com/ibhagwan/fzf-lua" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 	{ src = "https://github.com/NMAC427/guess-indent.nvim" },
@@ -171,6 +194,7 @@ vim.pack.add({
 		version = "master",
 	},
 	{ src = "https://github.com/stevearc/oil.nvim" },
+	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/folke/tokyonight.nvim" },
 })
 
@@ -280,6 +304,10 @@ require("gitsigns").setup({
 
 -- guess-indent.nvim
 require("guess-indent").setup({})
+
+-- harpoon
+local harpoon = require("harpoon")
+harpoon:setup()
 
 -- mini.icons
 require("mini.icons").setup()
