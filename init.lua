@@ -257,6 +257,11 @@ require("conform").setup({
 -- fzf.lua
 require("fzf-lua").setup({
 	"ivy",
+	keymap = {
+		fzf = {
+			["ctrl-q"] = "select-all+accept",
+		},
+	},
 })
 
 -- gitsigns.nvim
