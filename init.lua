@@ -26,7 +26,6 @@ vim.opt.termguicolors = true -- enable 24-bit colors
 vim.opt.signcolumn = "yes" -- always show sign column
 vim.opt.colorcolumn = "80" -- show color column at 80 characters
 vim.opt.showmatch = true -- highlight matching brackets
-vim.opt.matchtime = 0
 vim.opt.cmdheight = 1 -- command line height
 vim.opt.completeopt = "menuone,noinsert,noselect" -- completion options
 vim.opt.pumheight = 10 -- popup menu height
@@ -35,7 +34,6 @@ vim.opt.winblend = 0 -- floating window transparency
 vim.opt.winborder = "rounded" -- default border style of floting windows
 vim.opt.conceallevel = 0 -- don't hide markup
 vim.opt.concealcursor = "" -- don't hide cursor line markup
-vim.opt.lazyredraw = true -- don't redraw during macros
 vim.opt.synmaxcol = 300 -- don't syntax highlihgt after 300
 
 -- files
@@ -125,7 +123,7 @@ vim.keymap.set("n", "<C-k>", function()
 	require("harpoon"):list():select(3)
 end, { desc = "Select third buffer in harpoon" })
 vim.keymap.set("n", "<C-l>", function()
-	require("harpoon"):list():select(3)
+	require("harpoon"):list():select(4)
 end, { desc = "Select fourth buffer in harpoon" })
 
 -- autocommands
@@ -154,21 +152,29 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 			vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
 		end
+	end,
+})
 
-		-- Auto-format ("lint") on save.
-		-- Usually not needed if server supports "textDocument/willSaveWaitUntil".
-		if
-			not client:supports_method("textDocument/willSaveWaitUntil")
-			and client:supports_method("textDocument/formatting")
-		then
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				group = vim.api.nvim_create_augroup("FormattingGroup", { clear = false }),
-				buffer = args.buf,
-				callback = function()
-					require("conform").format({ bufnr = args.buf })
-				end,
-			})
+vim.api.nvim_create_autocmd("FileType", {
+	desc = "Enable treesitter highlighting",
+	callback = function(args)
+		local buf, filetype = args.buf, args.match
+
+		local language = vim.treesitter.language.get_lang(filetype)
+		if not language then
+			return
 		end
+
+		-- check if parser exists and load it
+		if not vim.treesitter.language.add(language) then
+			return
+		end
+
+		-- enables syntax highlighting and other treesitter features
+		vim.treesitter.start(buf, language)
+
+		-- enables treesitter based indentation
+		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 	end,
 })
 
@@ -178,21 +184,17 @@ vim.pack.add({
 		src = "https://github.com/Saghen/blink.cmp",
 		version = vim.version.range("1.0"),
 	},
-	{ src = "https://github.com/numToStr/Comment.nvim" },
 	{ src = "https://github.com/stevearc/conform.nvim" },
 	{ src = "https://github.com/sindrets/diffview.nvim" },
-	{ src = "https://github.com/ThePrimeagen/harpoon", version = "harpoon2" },
 	{ src = "https://github.com/ibhagwan/fzf-lua" },
 	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
 	{ src = "https://github.com/NMAC427/guess-indent.nvim" },
+	{ src = "https://github.com/ThePrimeagen/harpoon", version = "harpoon2" },
 	{ src = "https://github.com/mason-org/mason.nvim" },
 	{ src = "https://github.com/mason-org/mason-lspconfig.nvim" },
 	{ src = "https://github.com/echasnovski/mini.icons" },
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
-	{
-		src = "https://github.com/nvim-treesitter/nvim-treesitter",
-		version = "master",
-	},
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 	{ src = "https://github.com/stevearc/oil.nvim" },
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/folke/tokyonight.nvim" },
@@ -320,16 +322,15 @@ require("mason-lspconfig").setup({
 	ensure_installed = { "lua_ls", "ts_ls" },
 })
 
-require("nvim-treesitter.configs").setup({
-	ensure_installed = { "bash", "diff", "html", "lua", "markdown", "typescript", "javascript" },
-	auto_install = true,
-	highlight = {
-		enable = true,
-	},
-	ignore_install = {},
-	indent = { enable = true },
-	sync_install = false,
-	modules = { "nvim-treesitter.configs" },
+require("nvim-treesitter").install({
+	"bash",
+	"diff",
+	"html",
+	"lua",
+	"markdown",
+	"markdown_inline",
+	"typescript",
+	"javascript",
 })
 
 -- oil.nvim
