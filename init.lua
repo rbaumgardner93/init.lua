@@ -326,11 +326,13 @@ require("nvim-treesitter").install({
 	"bash",
 	"diff",
 	"html",
+	"javascript",
+	"jsx",
 	"lua",
 	"markdown",
 	"markdown_inline",
+	"tsx",
 	"typescript",
-	"javascript",
 })
 
 -- oil.nvim
