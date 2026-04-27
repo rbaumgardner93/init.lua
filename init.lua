@@ -252,6 +252,11 @@ require("blink-cmp").setup({
 -- conform.nvim
 require("conform").setup({
 	formatters_by_ft = {
+		astro = {
+			"prettierd",
+			"prettier",
+			stop_after_first = true,
+		},
 		lua = { "stylua" },
 		javascript = {
 			"prettierd",
@@ -319,10 +324,11 @@ require("mason").setup()
 
 -- mason-lspconfig.nvim
 require("mason-lspconfig").setup({
-	ensure_installed = { "lua_ls", "ts_ls" },
+	ensure_installed = { "astro", "lua_ls", "ts_ls" },
 })
 
 require("nvim-treesitter").install({
+	"astro",
 	"bash",
 	"diff",
 	"html",
