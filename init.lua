@@ -233,6 +233,7 @@ vim.lsp.config("lua_ls", {
 		},
 	},
 })
+vim.lsp.enable("tailwindcss")
 
 -- blink.cmp
 require("blink-cmp").setup({
