@@ -143,15 +143,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			-- Create a keymap for vim.lsp.buf.implementation ...
 			vim.keymap.set("n", "grd", "<cmd>FzfLua lsp_definitions<CR>", { desc = "[G]oto [D]efinition" })
 		end
-
-		-- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
-		if client:supports_method("textDocument/completion") then
-			-- Optional: trigger autocompletion on EVERY keypress. May be slow!
-			-- local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-			-- client.server_capabilities.completionProvider.triggerCharacters = chars
-
-			vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-		end
 	end,
 })
 
@@ -212,8 +203,17 @@ vim.cmd([[ colorscheme tokyonight]])
 
 -- lsp configuration
 
--- typescript
-vim.lsp.enable("ts_ls")
+local capabilities = require("blink.cmp").get_lsp_capabilities()
+capabilities.workspace = capabilities.workspace or {}
+capabilities.workspace.didChangeWatchedFiles = {
+	dynamicRegistration = false,
+}
+vim.lsp.config("*", {
+	capabilities = capabilities,
+})
+
+-- astro
+vim.lsp.enable("astro")
 
 -- lua
 vim.lsp.enable("lua_ls")
@@ -233,10 +233,18 @@ vim.lsp.config("lua_ls", {
 		},
 	},
 })
+
+-- typescript
+vim.lsp.enable("ts_ls")
+
+-- tailwind
+vim.lsp.config("tailwindcss", {
+	capabilities = capabilities,
+})
 vim.lsp.enable("tailwindcss")
 
 -- blink.cmp
-require("blink-cmp").setup({
+require("blink.cmp").setup({
 	keymap = {
 		preset = "default",
 	},
@@ -246,7 +254,7 @@ require("blink-cmp").setup({
 	sources = {
 		default = { "lsp", "path" },
 	},
-	fuzzy = { implementation = "lua" },
+	fuzzy = { implementation = "prefer_rust_with_warning" },
 	signature = { enabled = true },
 })
 
@@ -325,7 +333,7 @@ require("mason").setup()
 
 -- mason-lspconfig.nvim
 require("mason-lspconfig").setup({
-	ensure_installed = { "astro", "lua_ls", "ts_ls" },
+	ensure_installed = { "astro", "lua_ls", "tailwindcss", "ts_ls" },
 })
 
 require("nvim-treesitter").install({
