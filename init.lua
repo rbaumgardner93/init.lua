@@ -24,7 +24,7 @@ vim.opt.guicursor =
 
 vim.opt.termguicolors = true -- enable 24-bit colors
 vim.opt.signcolumn = "yes" -- always show sign column
-vim.opt.colorcolumn = "80" -- show color column at 80 characters
+vim.opt.colorcolumn = "100" -- show color column at 80 characters
 vim.opt.showmatch = false -- highlight matching brackets
 vim.opt.cmdheight = 1 -- command line height
 vim.opt.completeopt = "menuone,noinsert,noselect" -- completion options
@@ -215,6 +215,22 @@ vim.lsp.config("*", {
 -- astro
 vim.lsp.enable("astro")
 
+-- go
+vim.lsp.enable("gopls")
+vim.lsp.config("gopls", {
+	settings = {
+		gopls = {
+			gofumpt = true,
+			usePlaceholders = true,
+			completeUnimported = true,
+			staticcheck = true,
+			analyses = {
+				unusedparams = true,
+			},
+		},
+	},
+})
+
 -- lua
 vim.lsp.enable("lua_ls")
 vim.lsp.config("lua_ls", {
@@ -233,6 +249,9 @@ vim.lsp.config("lua_ls", {
 		},
 	},
 })
+
+-- python
+vim.lsp.enable("pyright")
 
 -- typescript
 vim.lsp.enable("ts_ls")
@@ -266,23 +285,30 @@ require("conform").setup({
 			"prettier",
 			stop_after_first = true,
 		},
+		go = { "goimports", "gofumpt" },
 		lua = { "stylua" },
+		json = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
 		javascript = {
+			"oxfmt",
 			"prettierd",
 			"prettier",
 			stop_after_first = true,
 		},
 		javascriptreact = {
+			"oxfmt",
 			"prettierd",
 			"prettier",
 			stop_after_first = true,
 		},
+		python = { "black", stop_after_first = true },
 		typescript = {
+			"oxfmt",
 			"prettierd",
 			"prettier",
 			stop_after_first = true,
 		},
 		typescriptreact = {
+			"oxfmt",
 			"prettierd",
 			"prettier",
 			stop_after_first = true,
@@ -333,19 +359,24 @@ require("mason").setup()
 
 -- mason-lspconfig.nvim
 require("mason-lspconfig").setup({
-	ensure_installed = { "astro", "lua_ls", "tailwindcss", "ts_ls" },
+	ensure_installed = { "astro", "gopls", "lua_ls", "pyright", "tailwindcss", "ts_ls" },
 })
 
 require("nvim-treesitter").install({
 	"astro",
 	"bash",
 	"diff",
+	"go",
+	"gomod",
+	"gosum",
+	"gowork",
 	"html",
 	"javascript",
 	"jsx",
 	"lua",
 	"markdown",
 	"markdown_inline",
+	"python",
 	"tsx",
 	"typescript",
 })
